@@ -61,7 +61,7 @@ public class Main {
 	private static ArrayList<PlayerCard> allCards = new ArrayList<PlayerCard>();
 	private static List<Element> allMatchesOnPage = new ArrayList<Element>();
 	private static String[] columnNames = {"Ovr", "Name", "Team","Series" ,"Buy Now", "Sell Now", "Buy - Sell (w/Tax)", "% Difference","Pg #"};
-	private static String[] comboItems = {"Live Series"};
+	private static String[] comboItems = {"All","Live Series", "Rookie", "Breakout", "Impact Veteran", "Star", "Hardware", "Postseason"};
 	private static Object[][] data ={};
     private static DefaultTableModel model = new DefaultTableModel(data,columnNames);
     private static JTable table;
@@ -644,7 +644,31 @@ public class Main {
     		    quickRefreshButton.setEnabled(false);
 
 	  			try{
-			    Document doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=1337&page="+i).get();
+	  				String selectedSeries = String.valueOf(seriesCombo.getSelectedItem());
+	  				Document doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=&page="+i).get();
+			    switch (selectedSeries) {
+			    case "Live Series": 
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=1337&page="+i).get();
+			    		break;
+			    case "Rookie":
+		    			doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10001&page="+i).get();
+			    		break;
+			    case "Breakout":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10002&page="+i).get();
+			    		break;
+			    case "Impact Veteran":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10003&page="+i).get();
+			    		break;
+			    case "Star":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10004&page="+i).get();
+			    		break;
+			    case "Hardware":
+			   		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10005&page="+i).get();
+			   		break;
+			    case "Postseason":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10006&page="+i).get();
+			    		break;
+			    }
 			    Elements matches = doc.select("tr[class=tbdy1]");
   			    if(matches.size()==0){
   					//System.out.println("Page "+i+" is blank.");
@@ -663,7 +687,7 @@ public class Main {
 						if (tempCard.getSellNow()==0) {
 							perDifStr = "N/A";
 						}	
-						model.addRow(new Object[]{(Integer)tempCard.getCardRank(),tempCard.getName(),tempCard.getTeam(),"Live Series",(Integer)tempCard.getBuyNow(),(Integer)tempCard.getSellNow(),difAfterTax,perDifStr,tempCard.getPg()});		
+						model.addRow(new Object[]{(Integer)tempCard.getCardRank(),tempCard.getName(),tempCard.getTeam(),String.valueOf(seriesCombo.getSelectedItem()),(Integer)tempCard.getBuyNow(),(Integer)tempCard.getSellNow(),difAfterTax,perDifStr,tempCard.getPg()});		
 					}
   					
   					addButton.setEnabled(true);
@@ -761,8 +785,34 @@ public class Main {
 	        	//URL yahoo = new URL("http://theshownation.com/market?page=" + i);
 		        //URL yahoo = new URL("http://theshownation.com/market?page="+pgList.get(i)+"&series_id=1337");
 	  			//https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=1337&page=3
-				Document doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=1337&page="+pgList.get(i)).get();
-			    Elements matches = doc.select("tr[class=tbdy1]");
+	  			
+	  			Document doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=&page="+i).get();
+
+  				String selectedSeries = String.valueOf(seriesCombo.getSelectedItem());
+			    switch (selectedSeries) {
+			    case "Live Series": 
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=1337&page="+i).get();
+			    		break;
+			    case "Rookie":
+		    			doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10001&page="+i).get();
+			    		break;
+			    case "Breakout":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10002&page="+i).get();
+			    		break;
+			    case "Impact Veteran":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10003&page="+i).get();
+			    		break;
+			    case "Star":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10004&page="+i).get();
+			    		break;
+			    case "Hardware":
+			   		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10005&page="+i).get();
+			   		break;
+			    case "Postseason":
+			    		doc = Jsoup.connect("https://www.daddyleagues.com/dd/17/players?name=&position=all&team=all&series=10006&page="+i).get();
+			    		break;
+			    }
+	  			Elements matches = doc.select("tr[class=tbdy1]");
   			    if(matches.size()==0){
   					//System.out.println("Page "+i+" is blank.");
   					blankPg=i-1;
@@ -847,7 +897,7 @@ public class Main {
 					if (tempCard.getSellNow()==0) {
 						perDifStr = "N/A";
 					}	
-					model.addRow(new Object[]{(Integer)tempCard.getCardRank(),tempCard.getName(),tempCard.getTeam(),"Live Series",(Integer)tempCard.getBuyNow(),(Integer)tempCard.getSellNow(),difAfterTax,perDifStr,tempCard.getPg()});		
+					model.addRow(new Object[]{(Integer)tempCard.getCardRank(),tempCard.getName(),tempCard.getTeam(),String.valueOf(seriesCombo.getSelectedItem()),(Integer)tempCard.getBuyNow(),(Integer)tempCard.getSellNow(),difAfterTax,perDifStr,tempCard.getPg()});		
 				}
 	        	
 	        	
